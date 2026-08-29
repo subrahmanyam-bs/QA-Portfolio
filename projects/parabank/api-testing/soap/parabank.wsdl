@@ -1,0 +1,1201 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://service.parabank.parasoft.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="ParaBank" targetNamespace="http://service.parabank.parasoft.com/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://service.parabank.parasoft.com/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://service.parabank.parasoft.com/" version="1.0">
+  <xs:element name="account" type="tns:account"/>
+  <xs:element name="billPay" type="tns:billPay"/>
+  <xs:element name="billPayResponse" type="tns:billPayResponse"/>
+  <xs:element name="billPayResult" type="tns:billPayResult"/>
+  <xs:element name="buyPosition" type="tns:buyPosition"/>
+  <xs:element name="buyPositionResponse" type="tns:buyPositionResponse"/>
+  <xs:element name="cleanDB" type="tns:cleanDB"/>
+  <xs:element name="cleanDBResponse" type="tns:cleanDBResponse"/>
+  <xs:element name="createAccount" type="tns:createAccount"/>
+  <xs:element name="createAccountResponse" type="tns:createAccountResponse"/>
+  <xs:element name="customer" type="tns:customer"/>
+  <xs:element name="deposit" type="tns:deposit"/>
+  <xs:element name="depositResponse" type="tns:depositResponse"/>
+  <xs:element name="getAccount" type="tns:getAccount"/>
+  <xs:element name="getAccountResponse" type="tns:getAccountResponse"/>
+  <xs:element name="getAccounts" type="tns:getAccounts"/>
+  <xs:element name="getAccountsResponse" type="tns:getAccountsResponse"/>
+  <xs:element name="getCustomer" type="tns:getCustomer"/>
+  <xs:element name="getCustomerResponse" type="tns:getCustomerResponse"/>
+  <xs:element name="getPosition" type="tns:getPosition"/>
+  <xs:element name="getPositionHistory" type="tns:getPositionHistory"/>
+  <xs:element name="getPositionHistoryResponse" type="tns:getPositionHistoryResponse"/>
+  <xs:element name="getPositionResponse" type="tns:getPositionResponse"/>
+  <xs:element name="getPositions" type="tns:getPositions"/>
+  <xs:element name="getPositionsResponse" type="tns:getPositionsResponse"/>
+  <xs:element name="getTransaction" type="tns:getTransaction"/>
+  <xs:element name="getTransactionResponse" type="tns:getTransactionResponse"/>
+  <xs:element name="getTransactions" type="tns:getTransactions"/>
+  <xs:element name="getTransactionsByAmount" type="tns:getTransactionsByAmount"/>
+  <xs:element name="getTransactionsByAmountResponse" type="tns:getTransactionsByAmountResponse"/>
+  <xs:element name="getTransactionsByMonthAndType" type="tns:getTransactionsByMonthAndType"/>
+  <xs:element name="getTransactionsByMonthAndTypeResponse" type="tns:getTransactionsByMonthAndTypeResponse"/>
+  <xs:element name="getTransactionsByToFromDate" type="tns:getTransactionsByToFromDate"/>
+  <xs:element name="getTransactionsByToFromDateResponse" type="tns:getTransactionsByToFromDateResponse"/>
+  <xs:element name="getTransactionsOnDate" type="tns:getTransactionsOnDate"/>
+  <xs:element name="getTransactionsOnDateResponse" type="tns:getTransactionsOnDateResponse"/>
+  <xs:element name="getTransactionsResponse" type="tns:getTransactionsResponse"/>
+  <xs:element name="historyPoint" type="tns:historyPoint"/>
+  <xs:element name="initializeDB" type="tns:initializeDB"/>
+  <xs:element name="initializeDBResponse" type="tns:initializeDBResponse"/>
+  <xs:element name="loanResponse" type="tns:loanResponse"/>
+  <xs:element name="login" type="tns:login"/>
+  <xs:element name="loginResponse" type="tns:loginResponse"/>
+  <xs:element name="payee" type="tns:payee"/>
+  <xs:element name="position" type="tns:position"/>
+  <xs:element name="requestLoan" type="tns:requestLoan"/>
+  <xs:element name="requestLoanResponse" type="tns:requestLoanResponse"/>
+  <xs:element name="sellPosition" type="tns:sellPosition"/>
+  <xs:element name="sellPositionResponse" type="tns:sellPositionResponse"/>
+  <xs:element name="setParameter" type="tns:setParameter"/>
+  <xs:element name="setParameterResponse" type="tns:setParameterResponse"/>
+  <xs:element name="shutdownJmsListener" type="tns:shutdownJmsListener"/>
+  <xs:element name="shutdownJmsListenerResponse" type="tns:shutdownJmsListenerResponse"/>
+  <xs:element name="startupJmsListener" type="tns:startupJmsListener"/>
+  <xs:element name="startupJmsListenerResponse" type="tns:startupJmsListenerResponse"/>
+  <xs:element name="transaction" type="tns:transaction"/>
+  <xs:element name="transfer" type="tns:transfer"/>
+  <xs:element name="transferResponse" type="tns:transferResponse"/>
+  <xs:element name="updateCustomer" type="tns:updateCustomer"/>
+  <xs:element name="updateCustomerResponse" type="tns:updateCustomerResponse"/>
+  <xs:element name="withdraw" type="tns:withdraw"/>
+  <xs:element name="withdrawResponse" type="tns:withdrawResponse"/>
+  <xs:complexType name="startupJmsListener">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="startupJmsListenerResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="buyPosition">
+    <xs:sequence>
+      <xs:element name="customerId" type="xs:int"/>
+      <xs:element name="accountId" type="xs:int"/>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="symbol" type="xs:string"/>
+      <xs:element name="shares" type="xs:int"/>
+      <xs:element name="pricePerShare" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="buyPositionResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="tns:position"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="position">
+    <xs:sequence>
+      <xs:element form="unqualified" name="positionId" type="xs:int"/>
+      <xs:element form="unqualified" name="customerId" type="xs:int"/>
+      <xs:element form="unqualified" minOccurs="0" name="name" type="xs:string"/>
+      <xs:element form="unqualified" minOccurs="0" name="symbol" type="xs:string"/>
+      <xs:element form="unqualified" name="shares" type="xs:int"/>
+      <xs:element form="unqualified" minOccurs="0" name="purchasePrice" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getCustomer">
+    <xs:sequence>
+      <xs:element name="customerId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getCustomerResponse">
+    <xs:sequence>
+      <xs:element ref="tns:customer"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="customer">
+    <xs:sequence>
+      <xs:element form="unqualified" name="id" type="xs:int"/>
+      <xs:element form="unqualified" minOccurs="0" name="firstName" type="xs:string"/>
+      <xs:element form="unqualified" minOccurs="0" name="lastName" type="xs:string"/>
+      <xs:element form="unqualified" minOccurs="0" name="address" type="tns:address"/>
+      <xs:element form="unqualified" minOccurs="0" name="phoneNumber" type="xs:string"/>
+      <xs:element form="unqualified" minOccurs="0" name="ssn" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="address">
+    <xs:sequence>
+      <xs:element form="unqualified" minOccurs="0" name="street" type="xs:string"/>
+      <xs:element form="unqualified" minOccurs="0" name="city" type="xs:string"/>
+      <xs:element form="unqualified" minOccurs="0" name="state" type="xs:string"/>
+      <xs:element form="unqualified" minOccurs="0" name="zipCode" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="initializeDB">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="initializeDBResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="createAccount">
+    <xs:sequence>
+      <xs:element name="customerId" type="xs:int"/>
+      <xs:element name="newAccountType" type="xs:int"/>
+      <xs:element name="fromAccountId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createAccountResponse">
+    <xs:sequence>
+      <xs:element ref="tns:account"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="account">
+    <xs:sequence>
+      <xs:element form="unqualified" name="id" type="xs:int"/>
+      <xs:element form="unqualified" name="customerId" type="xs:int"/>
+      <xs:element form="unqualified" minOccurs="0" name="type" type="tns:accountType"/>
+      <xs:element form="unqualified" minOccurs="0" name="balance" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAccounts">
+    <xs:sequence>
+      <xs:element name="customerId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAccountsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="tns:account"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransactions">
+    <xs:sequence>
+      <xs:element name="accountId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransactionsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="tns:transaction"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="transaction">
+    <xs:sequence>
+      <xs:element form="unqualified" name="id" type="xs:int"/>
+      <xs:element form="unqualified" name="accountId" type="xs:int"/>
+      <xs:element form="unqualified" minOccurs="0" name="type" type="tns:transactionType"/>
+      <xs:element form="unqualified" minOccurs="0" name="date" type="xs:dateTime"/>
+      <xs:element form="unqualified" minOccurs="0" name="amount" type="xs:decimal"/>
+      <xs:element form="unqualified" minOccurs="0" name="description" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransactionsOnDate">
+    <xs:sequence>
+      <xs:element name="accountId" type="xs:int"/>
+      <xs:element name="onDate" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransactionsOnDateResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="tns:transaction"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="withdraw">
+    <xs:sequence>
+      <xs:element name="accountId" type="xs:int"/>
+      <xs:element name="amount" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="withdrawResponse">
+    <xs:sequence>
+      <xs:element name="withdrawReturn" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateCustomer">
+    <xs:sequence>
+      <xs:element name="customerId" type="xs:int"/>
+      <xs:element name="firstName" type="xs:string"/>
+      <xs:element name="lastName" type="xs:string"/>
+      <xs:element name="street" type="xs:string"/>
+      <xs:element name="city" type="xs:string"/>
+      <xs:element name="state" type="xs:string"/>
+      <xs:element name="zipCode" type="xs:string"/>
+      <xs:element name="phoneNumber" type="xs:string"/>
+      <xs:element name="ssn" type="xs:string"/>
+      <xs:element name="username" type="xs:string"/>
+      <xs:element name="password" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateCustomerResponse">
+    <xs:sequence>
+      <xs:element name="customerUpdateResult" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deposit">
+    <xs:sequence>
+      <xs:element name="accountId" type="xs:int"/>
+      <xs:element name="amount" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="depositResponse">
+    <xs:sequence>
+      <xs:element name="depositReturn" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransactionsByToFromDate">
+    <xs:sequence>
+      <xs:element name="accountId" type="xs:int"/>
+      <xs:element name="fromDate" type="xs:string"/>
+      <xs:element name="toDate" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransactionsByToFromDateResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="tns:transaction"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="shutdownJmsListener">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="shutdownJmsListenerResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getPosition">
+    <xs:sequence>
+      <xs:element name="positionId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPositionResponse">
+    <xs:sequence>
+      <xs:element ref="tns:position"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="transfer">
+    <xs:sequence>
+      <xs:element name="fromAccountId" type="xs:int"/>
+      <xs:element name="toAccountId" type="xs:int"/>
+      <xs:element name="amount" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="transferResponse">
+    <xs:sequence>
+      <xs:element name="transferReturn" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="login">
+    <xs:sequence>
+      <xs:element name="username" type="xs:string"/>
+      <xs:element name="password" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="loginResponse">
+    <xs:sequence>
+      <xs:element name="customerId" type="tns:customer"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransactionsByMonthAndType">
+    <xs:sequence>
+      <xs:element name="accountId" type="xs:int"/>
+      <xs:element name="month" type="xs:string"/>
+      <xs:element name="type" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransactionsByMonthAndTypeResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="tns:transaction"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPositionHistory">
+    <xs:sequence>
+      <xs:element name="positionId" type="xs:int"/>
+      <xs:element name="startDate" type="xs:string"/>
+      <xs:element name="endDate" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPositionHistoryResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="tns:historyPoint"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="historyPoint">
+    <xs:sequence>
+      <xs:element form="unqualified" minOccurs="0" name="symbol" type="xs:string"/>
+      <xs:element form="unqualified" minOccurs="0" name="date" type="xs:dateTime"/>
+      <xs:element form="unqualified" minOccurs="0" name="closingPrice" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransaction">
+    <xs:sequence>
+      <xs:element name="transactionId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransactionResponse">
+    <xs:sequence>
+      <xs:element ref="tns:transaction"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setParameter">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setParameterResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getPositions">
+    <xs:sequence>
+      <xs:element name="customerId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPositionsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="tns:position"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransactionsByAmount">
+    <xs:sequence>
+      <xs:element name="accountId" type="xs:int"/>
+      <xs:element name="amount" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTransactionsByAmountResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="tns:transaction"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="sellPosition">
+    <xs:sequence>
+      <xs:element name="customerId" type="xs:int"/>
+      <xs:element name="accountId" type="xs:int"/>
+      <xs:element name="positionId" type="xs:int"/>
+      <xs:element name="shares" type="xs:int"/>
+      <xs:element name="pricePerShare" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="sellPositionResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="tns:position"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cleanDB">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="cleanDBResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="requestLoan">
+    <xs:sequence>
+      <xs:element name="customerId" type="xs:int"/>
+      <xs:element name="amount" type="xs:decimal"/>
+      <xs:element name="downPayment" type="xs:decimal"/>
+      <xs:element name="fromAccountId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="requestLoanResponse">
+    <xs:sequence>
+      <xs:element ref="tns:loanResponse"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="loanResponse">
+    <xs:sequence>
+      <xs:element form="unqualified" minOccurs="0" name="responseDate" type="xs:dateTime"/>
+      <xs:element form="unqualified" name="loanProviderName" type="xs:string"/>
+      <xs:element form="unqualified" name="approved" type="xs:boolean"/>
+      <xs:element form="unqualified" minOccurs="0" name="message" type="xs:string"/>
+      <xs:element form="unqualified" minOccurs="0" name="accountId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAccount">
+    <xs:sequence>
+      <xs:element name="accountId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAccountResponse">
+    <xs:sequence>
+      <xs:element ref="tns:account"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="billPay">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+      <xs:element name="arg1" type="xs:decimal"/>
+      <xs:element name="arg2" type="tns:payee"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="payee">
+    <xs:sequence>
+      <xs:element form="unqualified" minOccurs="0" name="accountNumber" type="xs:int"/>
+      <xs:element form="unqualified" minOccurs="0" name="address" type="tns:address"/>
+      <xs:element form="unqualified" minOccurs="0" name="name" type="xs:string"/>
+      <xs:element form="unqualified" minOccurs="0" name="phoneNumber" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="billPayResponse">
+    <xs:sequence>
+      <xs:element name="return" type="tns:billPayResult"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="billPayResult">
+    <xs:sequence>
+      <xs:element form="unqualified" name="accountId" type="xs:int"/>
+      <xs:element form="unqualified" minOccurs="0" name="amount" type="xs:decimal"/>
+      <xs:element form="unqualified" minOccurs="0" name="payeeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="accountType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CHECKING"/>
+      <xs:enumeration value="SAVINGS"/>
+      <xs:enumeration value="LOAN"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="transactionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Credit"/>
+      <xs:enumeration value="Debit"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ParaBankServiceException" type="tns:ParaBankServiceException"/>
+  <xs:complexType name="ParaBankServiceException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="buyPosition">
+    <wsdl:part element="tns:buyPosition" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCustomer">
+    <wsdl:part element="tns:getCustomer" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="initializeDB">
+    <wsdl:part element="tns:initializeDB" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="initializeDBResponse">
+    <wsdl:part element="tns:initializeDBResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sellPositionResponse">
+    <wsdl:part element="tns:sellPositionResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createAccount">
+    <wsdl:part element="tns:createAccount" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccounts">
+    <wsdl:part element="tns:getAccounts" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccountsResponse">
+    <wsdl:part element="tns:getAccountsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransactions">
+    <wsdl:part element="tns:getTransactions" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="loginResponse">
+    <wsdl:part element="tns:loginResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPositionHistoryResponse">
+    <wsdl:part element="tns:getPositionHistoryResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateCustomer">
+    <wsdl:part element="tns:updateCustomer" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deposit">
+    <wsdl:part element="tns:deposit" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransactionsOnDateResponse">
+    <wsdl:part element="tns:getTransactionsOnDateResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="transfer">
+    <wsdl:part element="tns:transfer" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransactionsByToFromDateResponse">
+    <wsdl:part element="tns:getTransactionsByToFromDateResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPositionsResponse">
+    <wsdl:part element="tns:getPositionsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="depositResponse">
+    <wsdl:part element="tns:depositResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cleanDBResponse">
+    <wsdl:part element="tns:cleanDBResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransactionsByMonthAndType">
+    <wsdl:part element="tns:getTransactionsByMonthAndType" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="withdrawResponse">
+    <wsdl:part element="tns:withdrawResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPositionHistory">
+    <wsdl:part element="tns:getPositionHistory" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPositions">
+    <wsdl:part element="tns:getPositions" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransactionsByAmount">
+    <wsdl:part element="tns:getTransactionsByAmount" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cleanDB">
+    <wsdl:part element="tns:cleanDB" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="requestLoan">
+    <wsdl:part element="tns:requestLoan" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="startupJmsListener">
+    <wsdl:part element="tns:startupJmsListener" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setParameterResponse">
+    <wsdl:part element="tns:setParameterResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="billPayResponse">
+    <wsdl:part element="tns:billPayResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createAccountResponse">
+    <wsdl:part element="tns:createAccountResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransactionsOnDate">
+    <wsdl:part element="tns:getTransactionsOnDate" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccountResponse">
+    <wsdl:part element="tns:getAccountResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="withdraw">
+    <wsdl:part element="tns:withdraw" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateCustomerResponse">
+    <wsdl:part element="tns:updateCustomerResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransactionsByAmountResponse">
+    <wsdl:part element="tns:getTransactionsByAmountResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransactionsByToFromDate">
+    <wsdl:part element="tns:getTransactionsByToFromDate" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransactionsByMonthAndTypeResponse">
+    <wsdl:part element="tns:getTransactionsByMonthAndTypeResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="shutdownJmsListener">
+    <wsdl:part element="tns:shutdownJmsListener" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPosition">
+    <wsdl:part element="tns:getPosition" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="login">
+    <wsdl:part element="tns:login" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPositionResponse">
+    <wsdl:part element="tns:getPositionResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCustomerResponse">
+    <wsdl:part element="tns:getCustomerResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransactionResponse">
+    <wsdl:part element="tns:getTransactionResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="startupJmsListenerResponse">
+    <wsdl:part element="tns:startupJmsListenerResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransaction">
+    <wsdl:part element="tns:getTransaction" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setParameter">
+    <wsdl:part element="tns:setParameter" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="requestLoanResponse">
+    <wsdl:part element="tns:requestLoanResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ParaBankServiceException">
+    <wsdl:part element="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="transferResponse">
+    <wsdl:part element="tns:transferResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTransactionsResponse">
+    <wsdl:part element="tns:getTransactionsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="shutdownJmsListenerResponse">
+    <wsdl:part element="tns:shutdownJmsListenerResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buyPositionResponse">
+    <wsdl:part element="tns:buyPositionResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sellPosition">
+    <wsdl:part element="tns:sellPosition" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccount">
+    <wsdl:part element="tns:getAccount" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="billPay">
+    <wsdl:part element="tns:billPay" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ParaBankService">
+    <wsdl:operation name="startupJmsListener">
+      <wsdl:input message="tns:startupJmsListener" name="startupJmsListener">
+    </wsdl:input>
+      <wsdl:output message="tns:startupJmsListenerResponse" name="startupJmsListenerResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="buyPosition">
+      <wsdl:input message="tns:buyPosition" name="buyPosition">
+    </wsdl:input>
+      <wsdl:output message="tns:buyPositionResponse" name="buyPositionResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getCustomer">
+      <wsdl:input message="tns:getCustomer" name="getCustomer">
+    </wsdl:input>
+      <wsdl:output message="tns:getCustomerResponse" name="getCustomerResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="initializeDB">
+      <wsdl:input message="tns:initializeDB" name="initializeDB">
+    </wsdl:input>
+      <wsdl:output message="tns:initializeDBResponse" name="initializeDBResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createAccount">
+      <wsdl:input message="tns:createAccount" name="createAccount">
+    </wsdl:input>
+      <wsdl:output message="tns:createAccountResponse" name="createAccountResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getAccounts">
+      <wsdl:input message="tns:getAccounts" name="getAccounts">
+    </wsdl:input>
+      <wsdl:output message="tns:getAccountsResponse" name="getAccountsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactions">
+      <wsdl:input message="tns:getTransactions" name="getTransactions">
+    </wsdl:input>
+      <wsdl:output message="tns:getTransactionsResponse" name="getTransactionsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionsOnDate">
+      <wsdl:input message="tns:getTransactionsOnDate" name="getTransactionsOnDate">
+    </wsdl:input>
+      <wsdl:output message="tns:getTransactionsOnDateResponse" name="getTransactionsOnDateResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="withdraw">
+      <wsdl:input message="tns:withdraw" name="withdraw">
+    </wsdl:input>
+      <wsdl:output message="tns:withdrawResponse" name="withdrawResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="updateCustomer">
+      <wsdl:input message="tns:updateCustomer" name="updateCustomer">
+    </wsdl:input>
+      <wsdl:output message="tns:updateCustomerResponse" name="updateCustomerResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deposit">
+      <wsdl:input message="tns:deposit" name="deposit">
+    </wsdl:input>
+      <wsdl:output message="tns:depositResponse" name="depositResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionsByToFromDate">
+      <wsdl:input message="tns:getTransactionsByToFromDate" name="getTransactionsByToFromDate">
+    </wsdl:input>
+      <wsdl:output message="tns:getTransactionsByToFromDateResponse" name="getTransactionsByToFromDateResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="shutdownJmsListener">
+      <wsdl:input message="tns:shutdownJmsListener" name="shutdownJmsListener">
+    </wsdl:input>
+      <wsdl:output message="tns:shutdownJmsListenerResponse" name="shutdownJmsListenerResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPosition">
+      <wsdl:input message="tns:getPosition" name="getPosition">
+    </wsdl:input>
+      <wsdl:output message="tns:getPositionResponse" name="getPositionResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="transfer">
+      <wsdl:input message="tns:transfer" name="transfer">
+    </wsdl:input>
+      <wsdl:output message="tns:transferResponse" name="transferResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="login">
+      <wsdl:input message="tns:login" name="login">
+    </wsdl:input>
+      <wsdl:output message="tns:loginResponse" name="loginResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionsByMonthAndType">
+      <wsdl:input message="tns:getTransactionsByMonthAndType" name="getTransactionsByMonthAndType">
+    </wsdl:input>
+      <wsdl:output message="tns:getTransactionsByMonthAndTypeResponse" name="getTransactionsByMonthAndTypeResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getPositionHistory">
+      <wsdl:input message="tns:getPositionHistory" name="getPositionHistory">
+    </wsdl:input>
+      <wsdl:output message="tns:getPositionHistoryResponse" name="getPositionHistoryResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransaction">
+      <wsdl:input message="tns:getTransaction" name="getTransaction">
+    </wsdl:input>
+      <wsdl:output message="tns:getTransactionResponse" name="getTransactionResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="setParameter">
+      <wsdl:input message="tns:setParameter" name="setParameter">
+    </wsdl:input>
+      <wsdl:output message="tns:setParameterResponse" name="setParameterResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPositions">
+      <wsdl:input message="tns:getPositions" name="getPositions">
+    </wsdl:input>
+      <wsdl:output message="tns:getPositionsResponse" name="getPositionsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionsByAmount">
+      <wsdl:input message="tns:getTransactionsByAmount" name="getTransactionsByAmount">
+    </wsdl:input>
+      <wsdl:output message="tns:getTransactionsByAmountResponse" name="getTransactionsByAmountResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="sellPosition">
+      <wsdl:input message="tns:sellPosition" name="sellPosition">
+    </wsdl:input>
+      <wsdl:output message="tns:sellPositionResponse" name="sellPositionResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="cleanDB">
+      <wsdl:input message="tns:cleanDB" name="cleanDB">
+    </wsdl:input>
+      <wsdl:output message="tns:cleanDBResponse" name="cleanDBResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="requestLoan">
+      <wsdl:input message="tns:requestLoan" name="requestLoan">
+    </wsdl:input>
+      <wsdl:output message="tns:requestLoanResponse" name="requestLoanResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getAccount">
+      <wsdl:input message="tns:getAccount" name="getAccount">
+    </wsdl:input>
+      <wsdl:output message="tns:getAccountResponse" name="getAccountResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="billPay">
+      <wsdl:input message="tns:billPay" name="billPay">
+    </wsdl:input>
+      <wsdl:output message="tns:billPayResponse" name="billPayResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ParaBankServiceException" name="ParaBankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ParaBankSoapBinding" type="tns:ParaBankService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="startupJmsListener">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="startupJmsListener">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="startupJmsListenerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="buyPosition">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="buyPosition">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="buyPositionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getCustomer">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getCustomer">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCustomerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="initializeDB">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="initializeDB">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="initializeDBResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createAccount">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createAccount">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createAccountResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getAccounts">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAccounts">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAccountsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactions">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getTransactions">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTransactionsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionsOnDate">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getTransactionsOnDate">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTransactionsOnDateResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="withdraw">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="withdraw">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="withdrawResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="updateCustomer">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateCustomer">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateCustomerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deposit">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deposit">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="depositResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionsByToFromDate">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getTransactionsByToFromDate">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTransactionsByToFromDateResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="shutdownJmsListener">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="shutdownJmsListener">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="shutdownJmsListenerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPosition">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getPosition">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPositionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="transfer">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="transfer">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="transferResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="login">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="login">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="loginResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionsByMonthAndType">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getTransactionsByMonthAndType">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTransactionsByMonthAndTypeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getPositionHistory">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getPositionHistory">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPositionHistoryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransaction">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getTransaction">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTransactionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="setParameter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="setParameter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setParameterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPositions">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getPositions">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPositionsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionsByAmount">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getTransactionsByAmount">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTransactionsByAmountResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="sellPosition">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="sellPosition">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="sellPositionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="cleanDB">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="cleanDB">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="cleanDBResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="requestLoan">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="requestLoan">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="requestLoanResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getAccount">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAccount">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAccountResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="billPay">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="billPay">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="billPayResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ParaBankServiceException">
+        <soap:fault name="ParaBankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ParaBank">
+    <wsdl:port binding="tns:ParaBankSoapBinding" name="ParaBankServiceImplPort">
+      <soap:address location="https://parabank.parasoft.com/parabank/services/ParaBank"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,1592 @@
+{
+  "info": {
+    "_postman_id": "b7f2c9a4-3e51-4d8a-9c62-parabank2026",
+    "name": "ParaBank REST API",
+    "description": "Functional and negative test collection for the ParaBank REST API.\n\n**Base URL:** https://parabank.parasoft.com/parabank/services/bank\n**Spec:** /parabank/services/bank/openapi.json (OpenAPI 3.0.1, The ParaBank REST API v3.0.0)\n\nNote: the api-docs URL commonly quoted for ParaBank (/parabank/services/bank/api-docs) returns HTTP 404. The live spec is served at openapi.json, and the WSDL at /parabank/services/ParaBank?wsdl.\n\nSeveral requests carry assertions that are **expected to fail** - they encode the defects recorded in ../../bug-reports/. Each names its BUG id in the test message, so a Newman run doubles as a regression check: when a defect is fixed, its test turns green.\n\nRequests marked WARNING mutate balances in the shared public sandbox. Restore them afterwards using the deposit and withdraw endpoints.\n\nRun from the CLI with:\n`newman run postman-collection.json -r cli,html`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Login",
+      "description": "Authentication. NOTE: credentials travel in the URL path and the response body contains the SSN (BUG-08).",
+      "item": [
+        {
+          "name": "TC-R01 Login - valid credentials",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/login/{{username}}/{{password}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login",
+                "{{username}}",
+                "{{password}}"
+              ]
+            },
+            "description": "Happy path. The SSN assertion is expected to FAIL and documents BUG-08."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns the expected customer', () => {",
+                  "  const j = pm.response.json();",
+                  "  pm.expect(j.id).to.eql(Number(pm.variables.get('customerId')));",
+                  "  pm.expect(j.firstName).to.eql('John');",
+                  "});",
+                  "pm.test('SECURITY - response should not expose SSN (BUG-08)', () => {",
+                  "  pm.expect(pm.response.json().ssn).to.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R02 Login - wrong password",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/login/{{username}}/wrongpass",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login",
+                "{{username}}",
+                "wrongpass"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Rejected with 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Generic failure message', () => pm.expect(pm.response.text()).to.include('Invalid username and/or password'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R03 Login - unknown username",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/login/nosuchuser999/{{password}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login",
+                "nosuchuser999",
+                "{{password}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Rejected with 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Message does not reveal whether the user exists', () => pm.expect(pm.response.text()).to.include('Invalid username and/or password'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 - Accounts",
+      "description": "Reading accounts and customers. None of these calls require authentication.",
+      "item": [
+        {
+          "name": "TC-R04 Get accounts for customer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "customers",
+                "{{customerId}}",
+                "accounts"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns a non-empty array', () => pm.expect(pm.response.json()).to.be.an('array').that.is.not.empty);",
+                  "pm.test('Every account belongs to the customer', () => {",
+                  "  const cid = Number(pm.variables.get('customerId'));",
+                  "  pm.response.json().forEach(a => pm.expect(a.customerId).to.eql(cid));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R05 Get account by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountId}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Schema is correct', () => {",
+                  "  const a = pm.response.json();",
+                  "  pm.expect(a).to.have.all.keys('id','customerId','type','balance');",
+                  "  pm.expect(a.type).to.be.oneOf(['CHECKING','SAVINGS']);",
+                  "  pm.expect(a.balance).to.be.a('number');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R06 Get account - non-existent id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/99999999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "99999999"
+              ]
+            },
+            "description": "The first assertion is expected to FAIL and documents BUG-11 (400 returned instead of 404)."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should be 404 Not Found (BUG-11)', () => pm.response.to.have.status(404));",
+                  "pm.test('Documented actual behaviour is 400', () => pm.expect(pm.response.code).to.eql(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R07 Get account - non-numeric id (wrong data type)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "abc"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Returns a client error', () => pm.expect(pm.response.code).to.be.oneOf([400,404]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R08 Get accounts - non-existent customer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers/12323/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "customers",
+                "12323",
+                "accounts"
+              ]
+            },
+            "description": "Expected to FAIL - the API returns 400. See BUG-11."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should be 404 (BUG-11)', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R09 SECURITY - read another customer with no credentials",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{otherCustomerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "customers",
+                "{{otherCustomerId}}"
+              ]
+            },
+            "description": "No auth header, cookie or token is sent. Expected to FAIL - documents BUG-08."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should require authentication (BUG-08)', () => pm.response.to.have.status(401));",
+                  "pm.test('Documented actual behaviour - 200 with full PII', () => {",
+                  "  pm.expect(pm.response.code).to.eql(200);",
+                  "  pm.expect(pm.response.json()).to.have.property('ssn');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 - Transactions",
+      "description": "Transaction history queries.",
+      "item": [
+        {
+          "name": "TC-R10 Get transactions for account",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountId}}",
+                "transactions"
+              ]
+            },
+            "description": "The last assertion fails on any account touched by a negative transfer - see BUG-02."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns an array', () => pm.expect(pm.response.json()).to.be.an('array'));",
+                  "pm.test('Every row belongs to the account and has a valid type', () => {",
+                  "  const id = Number(pm.variables.get('accountId'));",
+                  "  pm.response.json().forEach(t => {",
+                  "    pm.expect(t.accountId).to.eql(id);",
+                  "    pm.expect(t.type).to.be.oneOf(['Debit','Credit']);",
+                  "  });",
+                  "});",
+                  "pm.test('DATA QUALITY - no transaction has a negative amount (BUG-02)', () => {",
+                  "  pm.response.json().forEach(t => pm.expect(Number(t.amount)).to.be.at.least(0));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R11 Get transactions - non-existent account",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/99999999/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "99999999",
+                "transactions"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should be 404 (BUG-11)', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R12 Get transactions by amount",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}/transactions/amount/100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountId}}",
+                "transactions",
+                "amount",
+                "100"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Every result matches the requested amount', () => pm.response.json().forEach(t => pm.expect(Number(t.amount)).to.eql(100)));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R13 Get transactions by date range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}/transactions/fromDate/01-01-2020/toDate/12-31-2026",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountId}}",
+                "transactions",
+                "fromDate",
+                "01-01-2020",
+                "toDate",
+                "12-31-2026"
+              ]
+            },
+            "description": "Date format is MM-DD-YYYY."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns an array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R14 Get transaction by non-existent id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions",
+                "1"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should be 404 (BUG-11)', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 - Transfer Funds",
+      "description": "POST /transfer - the core money-movement operation.",
+      "item": [
+        {
+          "name": "TC-R28 Transfer - valid amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transfer?fromAccountId={{fromAccountId}}&toAccountId={{toAccountId}}&amount=100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfer"
+              ],
+              "query": [
+                {
+                  "key": "fromAccountId",
+                  "value": "{{fromAccountId}}"
+                },
+                {
+                  "key": "toAccountId",
+                  "value": "{{toAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "100"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Confirms the transfer', () => pm.expect(pm.response.text()).to.include('Successfully transferred'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R29 Transfer - negative amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transfer?fromAccountId={{fromAccountId}}&toAccountId={{toAccountId}}&amount=-10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfer"
+              ],
+              "query": [
+                {
+                  "key": "fromAccountId",
+                  "value": "{{fromAccountId}}"
+                },
+                {
+                  "key": "toAccountId",
+                  "value": "{{toAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "-10"
+                }
+              ]
+            },
+            "description": "Expected to FAIL - the API returns 200 and reverses the direction of the transfer. See BUG-02."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should reject a negative amount (BUG-02)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R30 Transfer - amount exceeds balance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transfer?fromAccountId={{toAccountId}}&toAccountId={{fromAccountId}}&amount=1000000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfer"
+              ],
+              "query": [
+                {
+                  "key": "fromAccountId",
+                  "value": "{{toAccountId}}"
+                },
+                {
+                  "key": "toAccountId",
+                  "value": "{{fromAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "1000000"
+                }
+              ]
+            },
+            "description": "Expected to FAIL - the source account is driven deeply negative. See BUG-01. WARNING: mutates the shared sandbox; restore the balance afterwards."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should reject insufficient funds (BUG-01)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R31 Transfer - same source and destination",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transfer?fromAccountId={{fromAccountId}}&toAccountId={{fromAccountId}}&amount=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfer"
+              ],
+              "query": [
+                {
+                  "key": "fromAccountId",
+                  "value": "{{fromAccountId}}"
+                },
+                {
+                  "key": "toAccountId",
+                  "value": "{{fromAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should reject a self-transfer (BUG-03)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R32 Transfer - unknown destination account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transfer?fromAccountId={{fromAccountId}}&toAccountId=99999999&amount=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfer"
+              ],
+              "query": [
+                {
+                  "key": "fromAccountId",
+                  "value": "{{fromAccountId}}"
+                },
+                {
+                  "key": "toAccountId",
+                  "value": "99999999"
+                },
+                {
+                  "key": "amount",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Rejected', () => pm.expect(pm.response.code).to.be.oneOf([400,404]));",
+                  "pm.test('Names the accounts involved', () => pm.expect(pm.response.text()).to.include('Could not find account'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R33 Transfer - missing required amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transfer?fromAccountId={{fromAccountId}}&toAccountId={{toAccountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfer"
+              ],
+              "query": [
+                {
+                  "key": "fromAccountId",
+                  "value": "{{fromAccountId}}"
+                },
+                {
+                  "key": "toAccountId",
+                  "value": "{{toAccountId}}"
+                }
+              ]
+            },
+            "description": "Expected to FAIL - an omitted required parameter surfaces as an unhandled 500. See BUG-11."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should be 400 Bad Request (BUG-11)', () => pm.response.to.have.status(400));",
+                  "pm.test('Documented actual behaviour is 500', () => pm.expect(pm.response.code).to.eql(500));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R34 SECURITY - transfer into another customer account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transfer?fromAccountId={{fromAccountId}}&toAccountId={{otherAccountId}}&amount=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfer"
+              ],
+              "query": [
+                {
+                  "key": "fromAccountId",
+                  "value": "{{fromAccountId}}"
+                },
+                {
+                  "key": "toAccountId",
+                  "value": "{{otherAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Unauthenticated cross-customer money movement. Expected to FAIL - documents BUG-08."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should require authentication (BUG-08)', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 - Create Account",
+      "description": "POST /createAccount. newAccountType: 0 = CHECKING, 1 = SAVINGS.",
+      "item": [
+        {
+          "name": "TC-R15 Create account - valid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/createAccount?customerId={{customerId}}&newAccountType=1&fromAccountId={{fromAccountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "createAccount"
+              ],
+              "query": [
+                {
+                  "key": "customerId",
+                  "value": "{{customerId}}"
+                },
+                {
+                  "key": "newAccountType",
+                  "value": "1"
+                },
+                {
+                  "key": "fromAccountId",
+                  "value": "{{fromAccountId}}"
+                }
+              ]
+            },
+            "description": "The balance assertion is expected to FAIL - the response reports 0 although the account is really opened with 100.00. See BUG-12."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns a SAVINGS account for this customer', () => {",
+                  "  const a = pm.response.json();",
+                  "  pm.expect(a.type).to.eql('SAVINGS');",
+                  "  pm.expect(a.customerId).to.eql(Number(pm.variables.get('customerId')));",
+                  "  pm.collectionVariables.set('newAccountId', a.id);",
+                  "});",
+                  "pm.test('Opening balance should be the documented 100 minimum (BUG-12)', () => {",
+                  "  pm.expect(Number(pm.response.json().balance)).to.eql(100);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R16 Create account - invalid account type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/createAccount?customerId={{customerId}}&newAccountType=9&fromAccountId={{fromAccountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "createAccount"
+              ],
+              "query": [
+                {
+                  "key": "customerId",
+                  "value": "{{customerId}}"
+                },
+                {
+                  "key": "newAccountType",
+                  "value": "9"
+                },
+                {
+                  "key": "fromAccountId",
+                  "value": "{{fromAccountId}}"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should be 400 Bad Request (BUG-11)', () => pm.response.to.have.status(400));",
+                  "pm.test('Documented actual behaviour is 500', () => pm.expect(pm.response.code).to.eql(500));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R17 Create account - missing required newAccountType",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/createAccount?customerId={{customerId}}&fromAccountId={{fromAccountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "createAccount"
+              ],
+              "query": [
+                {
+                  "key": "customerId",
+                  "value": "{{customerId}}"
+                },
+                {
+                  "key": "fromAccountId",
+                  "value": "{{fromAccountId}}"
+                }
+              ]
+            },
+            "description": "Expected to FAIL - an account is created and silently defaults to CHECKING. See BUG-12."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should reject a missing required parameter (BUG-12)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R18 Create account - unknown customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/createAccount?customerId=99999999&newAccountType=1&fromAccountId={{fromAccountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "createAccount"
+              ],
+              "query": [
+                {
+                  "key": "customerId",
+                  "value": "99999999"
+                },
+                {
+                  "key": "newAccountType",
+                  "value": "1"
+                },
+                {
+                  "key": "fromAccountId",
+                  "value": "{{fromAccountId}}"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Rejected', () => pm.expect(pm.response.code).to.be.oneOf([400,404]));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06 - Deposit",
+      "description": "POST /deposit",
+      "item": [
+        {
+          "name": "TC-R19 Deposit - valid amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/deposit?accountId={{depositAccountId}}&amount=50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deposit"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "{{depositAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Confirms the deposit', () => pm.expect(pm.response.text()).to.include('Successfully deposited'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R20 Deposit - negative amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/deposit?accountId={{depositAccountId}}&amount=-500",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deposit"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "{{depositAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "-500"
+                }
+              ]
+            },
+            "description": "Expected to FAIL - returns 200 and Successfully deposited $-500."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should reject a negative deposit', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R21 Deposit - zero amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/deposit?accountId={{depositAccountId}}&amount=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deposit"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "{{depositAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should reject a zero deposit', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R22 Deposit - non-numeric amount (wrong data type)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/deposit?accountId={{depositAccountId}}&amount=abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deposit"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "{{depositAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "abc"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Rejected', () => pm.expect(pm.response.code).to.be.oneOf([400,404]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R23 Deposit - missing required amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/deposit?accountId={{depositAccountId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deposit"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "{{depositAccountId}}"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should be 400 Bad Request (BUG-11)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R24 Deposit - unknown account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/deposit?accountId=99999999&amount=50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deposit"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "99999999"
+                },
+                {
+                  "key": "amount",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Rejected', () => pm.expect(pm.response.code).to.be.oneOf([400,404]));",
+                  "pm.test('Names the account', () => pm.expect(pm.response.text()).to.include('Could not find account'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "07 - Withdraw",
+      "description": "POST /withdraw",
+      "item": [
+        {
+          "name": "TC-R25 Withdraw - valid amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/withdraw?accountId={{depositAccountId}}&amount=50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "withdraw"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "{{depositAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Confirms the withdrawal', () => pm.expect(pm.response.text()).to.include('Successfully withdrew'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R26 Withdraw - more than the available balance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/withdraw?accountId={{depositAccountId}}&amount=100000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "withdraw"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "{{depositAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "100000"
+                }
+              ]
+            },
+            "description": "Expected to FAIL - the withdrawal succeeds and the account goes negative. WARNING: mutates the shared sandbox."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should reject insufficient funds (BUG-01 family)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-R27 Withdraw - negative amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/withdraw?accountId={{depositAccountId}}&amount=-25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "withdraw"
+              ],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "{{depositAccountId}}"
+                },
+                {
+                  "key": "amount",
+                  "value": "-25"
+                }
+              ]
+            },
+            "description": "Expected to FAIL - a negative withdrawal behaves as a deposit."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Should reject a negative withdrawal', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Response time is under 3000 ms', () => pm.expect(pm.response.responseTime).to.be.below(3000));"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://parabank.parasoft.com/parabank/services/bank",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "john",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "demo",
+      "type": "string"
+    },
+    {
+      "key": "customerId",
+      "value": "12212",
+      "type": "string"
+    },
+    {
+      "key": "accountId",
+      "value": "13344",
+      "type": "string"
+    },
+    {
+      "key": "fromAccountId",
+      "value": "13344",
+      "type": "string"
+    },
+    {
+      "key": "toAccountId",
+      "value": "13899",
+      "type": "string"
+    },
+    {
+      "key": "depositAccountId",
+      "value": "14787",
+      "type": "string"
+    },
+    {
+      "key": "otherCustomerId",
+      "value": "17762",
+      "type": "string"
+    },
+    {
+      "key": "otherAccountId",
+      "value": "23112",
+      "type": "string"
+    },
+    {
+      "key": "newAccountId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
