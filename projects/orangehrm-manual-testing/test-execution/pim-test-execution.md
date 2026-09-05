@@ -26,20 +26,20 @@ This document records the manual test execution details, actual results, and scr
 
 | Test Case ID | Test Condition | Description | Status | Evidence / Screenshots |
 | :--- | :--- | :--- | :---: | :--- |
-| **TC-PIM-001** | PC-001, PC-002 | Verify PIM sub-navigation menu tabs and search filter fields visibility. | **PASS** | [TC-PIM-001-navigation.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-PIM-001-navigation.png) |
-| **TC-PIM-002** | PC-003 | Verify Add Employee form inputs and layout visibility. | **PASS** | [TC-PIM-002-add-employee-layout.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-PIM-002-add-employee-layout.png) |
+| **TC-PIM-001** | PC-001, PC-002 | Verify PIM sub-navigation menu tabs and search filter fields visibility. | **PASS** | [TC-PIM-001-navigation.png](screenshots/TC-PIM-001-navigation.png) |
+| **TC-PIM-002** | PC-003 | Verify Add Employee form inputs and layout visibility. | **PASS** | [TC-PIM-002-add-employee-layout.png](screenshots/TC-PIM-002-add-employee-layout.png) |
 | **TC-PIM-003** | PC-004 | Verify validation message when submitting Add Employee form with blank mandatory fields. | **PASS** | Inline validations displayed |
 | **TC-PIM-004** | PC-005 | Verify Middle Name and Employee ID are optional during profile creation. | **PASS** | Profile created successfully |
-| **TC-PIM-005** | PC-008 | Verify employee creation with default auto-generated ID. | **PASS** | [TC-PIM-005-employee-created.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-PIM-005-employee-created.png) |
+| **TC-PIM-005** | PC-008 | Verify employee creation with default auto-generated ID. | **PASS** | [TC-PIM-005-employee-created.png](screenshots/TC-PIM-005-employee-created.png) |
 | **TC-PIM-006** | PC-009 | Verify manual override of auto-generated Employee ID. | **PASS** | Overridden ID saved in record |
 | **TC-PIM-007** | PC-010, PC-011 | Verify file format upload validation on profile photo input. | **PASS** | Validation message verified |
 | **TC-PIM-008** | PC-006, PC-007 | Verify mandatory checks and password warnings in Login Details credentials toggles. | **PASS** | Validation warnings verified |
 | **TC-PIM-009** | PC-012 | Verify successful employee profile creation with active login account. | **PASS** | Redirection success |
-| **TC-PIM-010** | PC-013, PC-014 | Verify employee search filter query by exact Name and ID. | **PASS** | [TC-PIM-010-search-results.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-PIM-010-search-results.png) |
+| **TC-PIM-010** | PC-013, PC-014 | Verify employee search filter query by exact Name and ID. | **PASS** | [TC-PIM-010-search-results.png](screenshots/TC-PIM-010-search-results.png) |
 | **TC-PIM-011** | PC-015 | Verify employee search filter query by Job Title and Status. | **PASS** | List grid updated successfully |
 | **TC-PIM-012** | PC-016 | Verify Reset button clears search filter card inputs. | **PASS** | Inputs cleared successfully |
 | **TC-PIM-013** | PC-017 | Verify presence and functionality of table pagination controls. | **PASS** | Controls checked at table footer |
-| **TC-PIM-014** | PC-018 | Verify successful deletion of selected employee from list. | **PASS** | [TC-PIM-014-employee-deleted.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-PIM-014-employee-deleted.png) |
+| **TC-PIM-014** | PC-018 | Verify successful deletion of selected employee from list. | **PASS** | [TC-PIM-014-employee-deleted.png](screenshots/TC-PIM-014-employee-deleted.png) |
 
 ---
 

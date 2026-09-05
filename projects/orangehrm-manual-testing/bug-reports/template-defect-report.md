@@ -47,5 +47,5 @@ Use this template to document reproducible bugs discovered during testing. Copy 
 ---
 
 ## Evidence & Attachments
-* **Screenshot**: `[Link to screenshot file, e.g., file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/BUG-XXX-001-screenshot.png]`
+* **Screenshot**: `[Link to screenshot file, e.g., ../test-execution/screenshots/BUG-XXX-001-screenshot.png]`
 * **Console Logs**: `[Link to raw console logs or snippet if applicable]`

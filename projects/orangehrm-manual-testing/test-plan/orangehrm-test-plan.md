@@ -97,10 +97,10 @@ The following testing risks have been identified:
 ## 8. Deliverables
 The following deliverables have been successfully finalized for this module testing cycle:
 * **Login Test Plan** (This document - Completed)
-* **Login Test Cases** (Created in [login-test-cases.md](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-cases/login/login-test-cases.md) - Completed)
-* **Test Execution Results** (Recorded in [login-test-execution.md](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/login-test-execution.md) - Completed)
-* **Execution Evidence** (Screenshots stored in [screenshots/](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/) - Completed)
-* **Login Test Summary** (Created in [login-test-summary.md](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-summary/login-test-summary.md) - Completed)
+* **Login Test Cases** (Created in [login-test-cases.md](../test-cases/login/login-test-cases.md) - Completed)
+* **Test Execution Results** (Recorded in [login-test-execution.md](../test-execution/login-test-execution.md) - Completed)
+* **Execution Evidence** (Screenshots stored in [screenshots/](../test-execution/screenshots/) - Completed)
+* **Login Test Summary** (Created in [login-test-summary.md](../test-summary/login-test-summary.md) - Completed)
 
 ---
 

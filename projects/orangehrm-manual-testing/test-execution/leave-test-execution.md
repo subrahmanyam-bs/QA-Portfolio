@@ -26,8 +26,8 @@ This document records the manual test execution details, actual results, and scr
 
 | Test Case ID | Test Condition | Description | Status | Evidence / Screenshots |
 | :--- | :--- | :--- | :---: | :--- |
-| **TC-LEAVE-001** | LC-LV-001, LC-LV-003 | Verify Leave sub-navigation menu tabs and search filter fields visibility. | **PASS** | [TC-LEAVE-001-navigation.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-LEAVE-001-navigation.png) |
-| **TC-LEAVE-002** | LC-LV-002, LC-LV-009 | Verify Assign Leave input fields and date placeholder format visibility. | **PASS** | [TC-LEAVE-002-assign-layout.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-LEAVE-002-assign-layout.png) |
+| **TC-LEAVE-001** | LC-LV-001, LC-LV-003 | Verify Leave sub-navigation menu tabs and search filter fields visibility. | **PASS** | [TC-LEAVE-001-navigation.png](screenshots/TC-LEAVE-001-navigation.png) |
+| **TC-LEAVE-002** | LC-LV-002, LC-LV-009 | Verify Assign Leave input fields and date placeholder format visibility. | **PASS** | [TC-LEAVE-002-assign-layout.png](screenshots/TC-LEAVE-002-assign-layout.png) |
 | **TC-LEAVE-003** | LC-LV-004 | Verify validation warning 'Required' when submitting blank mandatory fields. | **PASS** | Warnings verified under 4 inputs |
 | **TC-LEAVE-004** | LC-LV-005 | Verify Employee Name autocomplete lookups reject invalid entries. | **PASS** | Red warning label 'Invalid' verified |
 | **TC-LEAVE-005** | LC-LV-006 | Verify date range validation warning when From Date is after To Date. | **PASS** | Warning 'To date should be after from date' verified |
@@ -35,7 +35,7 @@ This document records the manual test execution details, actual results, and scr
 | **TC-LEAVE-007** | LC-LV-008 | Verify Leave Balance informational panel is read-only. | **PASS** | Balance panel is non-editable |
 | **TC-LEAVE-008** | LC-LV-010 | Verify calendar modal popup opens on clicking From Date icon. | **PASS** | Calendar grid overlay displayed |
 | **TC-LEAVE-009** | LC-LV-011 | Verify successful leave assignment with valid details. | **PASS** | Form submission completed |
-| **TC-LEAVE-010** | LC-LV-012 | Verify filtering Leave List history grid by Employee Name. | **PASS** | [TC-LEAVE-010-search-results.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-LEAVE-010-search-results.png) |
+| **TC-LEAVE-010** | LC-LV-012 | Verify filtering Leave List history grid by Employee Name. | **PASS** | [TC-LEAVE-010-search-results.png](screenshots/TC-LEAVE-010-search-results.png) |
 | **TC-LEAVE-011** | LC-LV-013 | Verify filtering Leave List history grid by Leave Type and Status. | **PASS** | Table query completed |
 | **TC-LEAVE-012** | LC-LV-014 | Verify Reset button clears search card filter fields. | **PASS** | Input values restored to defaults |
 | **TC-LEAVE-013** | LC-LV-015 | Verify overlapping date range validation constraints on leave assignment. | **PASS** | Overlap check submitted successfully |

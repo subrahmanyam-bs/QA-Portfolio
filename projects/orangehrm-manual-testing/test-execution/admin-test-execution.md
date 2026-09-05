@@ -26,16 +26,16 @@ This document records the manual test execution details, actual results, and scr
 
 | Test Case ID | Test Condition | Description | Status | Evidence / Screenshots |
 | :--- | :--- | :--- | :---: | :--- |
-| **TC-ADMIN-001** | LC-AD-001, LC-AD-003 | Verify Admin sub-navigation menu headers and search filter fields layout. | **PASS** | [TC-ADMIN-001-navigation.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-ADMIN-001-navigation.png) |
-| **TC-ADMIN-002** | LC-AD-002 | Verify Add System User form fields and placeholders visibility. | **PASS** | [TC-ADMIN-002-add-user-layout.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-ADMIN-002-add-user-layout.png) |
+| **TC-ADMIN-001** | LC-AD-001, LC-AD-003 | Verify Admin sub-navigation menu headers and search filter fields layout. | **PASS** | [TC-ADMIN-001-navigation.png](screenshots/TC-ADMIN-001-navigation.png) |
+| **TC-ADMIN-002** | LC-AD-002 | Verify Add System User form fields and placeholders visibility. | **PASS** | [TC-ADMIN-002-add-user-layout.png](screenshots/TC-ADMIN-002-add-user-layout.png) |
 | **TC-ADMIN-003** | LC-AD-004 | Verify validation warnings on Add User form when submitting blank fields. | **PASS** | Warnings verified under 6 inputs |
 | **TC-ADMIN-004** | LC-AD-005 | Verify Employee Name autocomplete lookups reject invalid entries. | **PASS** | Autocomplete rejected invalid lookups |
 | **TC-ADMIN-005** | LC-AD-006 | Verify credentials validation warnings on passwords. | **PASS** | Checked length and mismatch warnings |
 | **TC-ADMIN-006** | LC-AD-007 | Verify successful user creation when all details are valid. | **PASS** | Created system user account successfully |
-| **TC-ADMIN-007** | LC-AD-008 | Verify filtering System Users grid by exact Username. | **PASS** | [TC-ADMIN-007-search-results.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-ADMIN-007-search-results.png) |
+| **TC-ADMIN-007** | LC-AD-008 | Verify filtering System Users grid by exact Username. | **PASS** | [TC-ADMIN-007-search-results.png](screenshots/TC-ADMIN-007-search-results.png) |
 | **TC-ADMIN-008** | LC-AD-009 | Verify filtering System Users grid by User Role and Status. | **PASS** | Filter query returned correct match |
 | **TC-ADMIN-009** | LC-AD-010 | Verify Reset button clears search filter fields. | **PASS** | Input fields cleared successfully |
-| **TC-ADMIN-010** | LC-AD-011 | Verify successful deletion of selected system user record. | **PASS** | [TC-ADMIN-010-user-deleted.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-ADMIN-010-user-deleted.png) |
+| **TC-ADMIN-010** | LC-AD-011 | Verify successful deletion of selected system user record. | **PASS** | [TC-ADMIN-010-user-deleted.png](screenshots/TC-ADMIN-010-user-deleted.png) |
 | **TC-ADMIN-011** | LC-AD-012 | Verify duplicate Username registration rejection validation. | **PASS** | Duplicate rejected with 'Already exists' |
 
 ---

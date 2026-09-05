@@ -36,15 +36,15 @@ This document details the actual execution results of the manual test cases desi
 
 | Test Case ID | Test Case Title | Status | Actual Result | Evidence | Bug ID |
 | :--- | :--- | :---: | :--- | :--- | :---: |
-| **TC-LOGIN-001** | Verify Login Page UI Elements | **PASS** | UI components (username, password, submit button, logos, forgot password text) are visible and formatted correctly. | [TC-LOGIN-001-login-page.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-LOGIN-001-login-page.png) | — |
+| **TC-LOGIN-001** | Verify Login Page UI Elements | **PASS** | UI components (username, password, submit button, logos, forgot password text) are visible and formatted correctly. | [TC-LOGIN-001-login-page.png](screenshots/TC-LOGIN-001-login-page.png) | — |
 | **TC-LOGIN-002** | Verify Password Masking & Toggle | **PASS** | Password input matches type `password` and masking is active. No visibility toggle was observed in DOM. | — | — |
-| **TC-LOGIN-003** | Verify Required Validation | **PASS** | Triggered "Required" warning under fields on blank/partial inputs. | [TC-LOGIN-003-required-validation.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-LOGIN-003-required-validation.png) | — |
+| **TC-LOGIN-003** | Verify Required Validation | **PASS** | Triggered "Required" warning under fields on blank/partial inputs. | [TC-LOGIN-003-required-validation.png](screenshots/TC-LOGIN-003-required-validation.png) | — |
 | **TC-LOGIN-004** | Verify Whitespace Trimming | **PASS** | Whitespace-padded username fails login with "Invalid credentials" (treated literally). | — | — |
 | **TC-LOGIN-005** | Verify Special Characters | **PASS** | Allowed special characters and failed with expected "Invalid credentials" warning. | — | — |
 | **TC-LOGIN-006** | Verify Boundary Lengths | **PASS** | Allowed entering 150 characters into fields and failed login with warning. No layout distortions. | — | — |
 | **TC-LOGIN-007** | Verify Clipboard Operations | **PASS** | Clipboard paste works. Attempting to copy out of the password field was blocked by the browser, leaving the clipboard's previous value ("Admin") unchanged. | — | — |
-| **TC-LOGIN-008** | Verify Successful Redirection | **PASS** | Valid credentials redirected user to Dashboard page. Dashboard header displayed. | [TC-LOGIN-008-successful-login.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-LOGIN-008-successful-login.png) | — |
-| **TC-LOGIN-009** | Verify Failed Authentication | **PASS** | Invalid credential combinations (both, username only, password only) display "Invalid credentials". | [TC-LOGIN-009-invalid-credentials.png](file:///c:/Users/balub/Desktop/trying_demo/orangehrm-manual-testing/test-execution/screenshots/TC-LOGIN-009-invalid-credentials.png) | — |
+| **TC-LOGIN-008** | Verify Successful Redirection | **PASS** | Valid credentials redirected user to Dashboard page. Dashboard header displayed. | [TC-LOGIN-008-successful-login.png](screenshots/TC-LOGIN-008-successful-login.png) | — |
+| **TC-LOGIN-009** | Verify Failed Authentication | **PASS** | Invalid credential combinations (both, username only, password only) display "Invalid credentials". | [TC-LOGIN-009-invalid-credentials.png](screenshots/TC-LOGIN-009-invalid-credentials.png) | — |
 | **TC-LOGIN-010** | Verify Case Sensitivity | **PASS** | Login succeeded with lowercase username (`admin`), indicating that username input matching is case-insensitive. | — | — |
 | **TC-LOGIN-011** | Verify Account Lockout | **PASS** | Successfully authenticated immediately after 5 failed login attempts. No account lockout was observed during testing. | — | — |
 | **TC-LOGIN-012** | Verify Logout Redirection | **PASS** | Triggering logout redirected back to login page and restored login input fields. | — | — |
