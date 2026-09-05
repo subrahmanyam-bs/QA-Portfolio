@@ -7,7 +7,7 @@ This summary report aggregates the execution metrics, observations, and conclusi
 ## 1. Executive Summary
 Testing was conducted on the PIM Module of the OrangeHRM public demo application to verify that the employee list, search filtering, profile creation, credentials configuration, and deletion workflows conform to manual testing guidelines. 
 
-The execution resulted in a **100% pass rate** (14 out of 14 test cases passed). The application successfully handles mandatory input validation, allows manual override of the Employee ID, restricts file uploads to valid formats, and correctly deletes records from the database grid. No defects were logged during this cycle.
+The execution resulted in a **100% pass rate** (15 out of 15 test cases passed). The application successfully handles mandatory input validation, allows manual override of the Employee ID, restricts file uploads to valid formats, safely renders HTML/script-injection payloads in name fields as plain text with no execution, and correctly deletes records from the database grid. No defects were logged during this cycle.
 
 ---
 
@@ -27,8 +27,8 @@ Testing was executed on Chromium (v133.0) on Windows 11. The application was hos
 
 | Metric | Count | Percentage |
 | :--- | :---: | :---: |
-| **Total Test Cases** | 14 | 100.0% |
-| **Passed** | 14 | 100.0% |
+| **Total Test Cases** | 15 | 100.0% |
+| **Passed** | 15 | 100.0% |
 | **Failed** | 0 | 0.0% |
 | **Blocked** | 0 | 0.0% |
 | **Not Executed** | 0 | 0.0% |
@@ -37,7 +37,7 @@ Testing was executed on Chromium (v133.0) on Windows 11. The application was hos
 ---
 
 ## 5. Passed Tests
-Fourteen test cases were executed and passed successfully. Key verifications include:
+Fifteen test cases were executed and passed successfully. Key verifications include:
 - Visual presence of navigation tabs and search fields (TC-PIM-001).
 - Add Employee layout and photo upload placeholder (TC-PIM-002).
 - Triggering "Required" validation messages on empty mandatory inputs (TC-PIM-003).
@@ -52,6 +52,7 @@ Fourteen test cases were executed and passed successfully. Key verifications inc
 - Reset button clearing inputs back to defaults (TC-PIM-012).
 - Verifying pagination is hidden when record list size is small (TC-PIM-013).
 - Successful check box selection and record deletion from the database (TC-PIM-014).
+- HTML/script injection payload in the First Name field rendered safely as plain text, with no JavaScript execution (TC-PIM-015).
 
 ---
 
@@ -75,4 +76,4 @@ Fourteen test cases were executed and passed successfully. Key verifications inc
 ---
 
 ## 9. Final Testing Conclusion
-Based on the executed scope of 14 test cases, the OrangeHRM PIM Module behaves in accordance with functional expectations. Creation grids, validation constraints, credentials configurations, and search parameters operate cleanly. Compatibility of photo uploads with extremely large file sizes (MB boundary limits) remains a point of future scope.
+Based on the executed scope of 15 test cases, the OrangeHRM PIM Module behaves in accordance with functional expectations. Creation grids, validation constraints, credentials configurations, search parameters, and output encoding of untrusted input in name fields all operate cleanly. Compatibility of photo uploads with extremely large file sizes (MB boundary limits) remains a point of future scope.

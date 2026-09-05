@@ -7,7 +7,7 @@ This summary report aggregates the execution metrics, observations, and conclusi
 ## 1. Executive Summary
 Testing was conducted on the Admin Module (User Management sub-menu) of the OrangeHRM public demo application to verify that the system user filters, administrative user creation forms, duplicate username validation rules, password strength requirements, and record deletions conform to manual testing guidelines.
 
-The execution resulted in a **100% pass rate** (11 out of 11 test cases passed). The application successfully rejects blank inputs, triggers warnings for duplicate usernames and weak passwords, filters user records dynamically, and handles deletion confirmation grids. No defects were logged during this cycle.
+The execution resulted in a **91.7% pass rate** (11 out of 12 test cases passed). The application successfully rejects blank inputs, triggers warnings for duplicate usernames and weak passwords, filters user records dynamically, and handles deletion confirmation grids. One defect was logged this cycle: the Username field on Add User accepts unrestricted special characters with no format validation (BUG-ADMIN-001).
 
 ---
 
@@ -27,12 +27,12 @@ Testing was executed on Chromium (v133.0) on Windows 11. The application was hos
 
 | Metric | Count | Percentage |
 | :--- | :---: | :---: |
-| **Total Test Cases** | 11 | 100.0% |
-| **Passed** | 11 | 100.0% |
-| **Failed** | 0 | 0.0% |
+| **Total Test Cases** | 12 | 100.0% |
+| **Passed** | 11 | 91.7% |
+| **Failed** | 1 | 8.3% |
 | **Blocked** | 0 | 0.0% |
 | **Not Executed** | 0 | 0.0% |
-| **Overall Pass Rate** | — | **100.0%** |
+| **Overall Pass Rate** | — | **91.7%** |
 
 ---
 
@@ -52,9 +52,15 @@ Eleven test cases were executed and passed successfully. Key verifications inclu
 
 ---
 
+## 5a. Failed Tests
+One test case failed:
+- **TC-ADMIN-012** — Username field accepted a SQL-injection-style string (`' OR '1'='1`, containing a space and quotes) with no format validation, and successfully created a working account with that literal username. See [BUG-ADMIN-001](../bug-reports/BUG-ADMIN-001-username-accepts-unrestricted-characters.md).
+
+---
+
 ## 6. Defect Summary
-* **Total Defects Logged**: `0`
-* **Defect breakdown**: No bugs were observed or logged during this testing cycle.
+* **Total Defects Logged**: `1`
+* **Defect breakdown**: BUG-ADMIN-001 (Low severity, Low priority) — Username field has no character-set restriction. Confirmed not exploitable as SQL injection; the backend treats the value as a literal string. The concern is data hygiene / downstream-integration risk, not a security vulnerability.
 
 ---
 
@@ -71,4 +77,4 @@ Eleven test cases were executed and passed successfully. Key verifications inclu
 ---
 
 ## 9. Final Testing Conclusion
-Based on the executed scope of 11 test cases, the OrangeHRM Admin Module operates correctly. Username uniqueness validation, password length controls, employee lookups, and deletion workflows conform to design requirements.
+Based on the executed scope of 12 test cases, the OrangeHRM Admin Module operates correctly for the core user-management flows: username uniqueness validation, password length controls, employee lookups, and deletion workflows all conform to design requirements. The one gap found, missing character-set validation on the Username field (BUG-ADMIN-001), is low severity and does not block a release recommendation, but is worth a quick fix given how cheap input-format validation is to add.

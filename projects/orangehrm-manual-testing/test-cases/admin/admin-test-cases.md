@@ -239,6 +239,27 @@ This document outlines the detailed manual test cases designed for the OrangeHRM
 
 ---
 
+## TC-ADMIN-012: Verify Username Field Rejects Unsafe Special Characters
+
+| Field | Value |
+|---|---|
+| Test Case ID | TC-ADMIN-012 |
+| Test Condition | LC-AD-013 |
+| Module | Admin |
+| Priority | Medium |
+| Type | Validation |
+| Preconditions | The user is on the "Add User" page. |
+| Test Data | Username: `' OR '1'='1` (a space and single quotes, chosen to probe both format validation and injection handling); Password: a valid strong password |
+
+### Test Steps
+
+| Step | Action | Expected Result |
+|---|---|---|
+| 1 | Select a valid User Role, Employee Name, and Status. | Inputs are accepted. |
+| 2 | Enter `' OR '1'='1` in the Username field, fill a valid Password and Confirm Password, and click Save. | Submission fails with a validation message rejecting the unsafe characters, or the value is sanitized before saving. |
+
+---
+
 ## Test Condition Traceability
 
 The following matrix maps the Admin Test Conditions to their corresponding test cases:
@@ -257,6 +278,7 @@ The following matrix maps the Admin Test Conditions to their corresponding test 
 | **LC-AD-010** | TC-ADMIN-009 | Covers Reset button clearing search filters. |
 | **LC-AD-011** | TC-ADMIN-010 | Covers checkbox selection and record deletion. |
 | **LC-AD-012** | TC-ADMIN-011 | Covers duplicate username rejection alerts. |
+| **LC-AD-013** | TC-ADMIN-012 | Covers username field character-set validation against special/injection-style input. |
 
 ---
 
@@ -264,12 +286,12 @@ The following matrix maps the Admin Test Conditions to their corresponding test 
 
 ### Priority Distribution
 * **High Priority**: 9 test cases
-* **Medium Priority**: 2 test cases
+* **Medium Priority**: 3 test cases
 * **Low Priority**: 0 test cases
-* **Total Test Cases**: `11`
+* **Total Test Cases**: `12`
 
 ### Test Type Distribution
 * **UI**: 2 test cases
-* **Validation**: 4 test cases
+* **Validation**: 5 test cases
 * **Functional**: 4 test cases
 * **Usability**: 1 test case

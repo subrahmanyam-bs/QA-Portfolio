@@ -309,6 +309,27 @@ This document outlines the detailed manual test cases designed for the OrangeHRM
 
 ---
 
+## TC-PIM-015: Verify HTML/Script Injection Payload in First Name Field is Safely Rendered
+
+| Field | Value |
+|---|---|
+| Test Case ID | TC-PIM-015 |
+| Test Condition | PC-019 |
+| Module | PIM |
+| Priority | Medium |
+| Type | Security |
+| Preconditions | The user is on the Add Employee page. |
+| Test Data | First Name: `<img src=x onerror=alert(1)>`; Last Name: `QAXSSTest` |
+
+### Test Steps
+
+| Step | Action | Expected Result |
+|---|---|---|
+| 1 | Enter the payload as First Name, `QAXSSTest` as Last Name, a unique Employee ID, and click Save. | Employee profile is created without error. |
+| 2 | Open the created employee's Personal Details page and observe the name header. | The payload renders as plain visible text, not as a live `<img>` tag; no JavaScript alert fires. |
+
+---
+
 ## Test Condition Traceability
 
 The following matrix maps the PIM Test Conditions to their corresponding test cases:
@@ -333,6 +354,7 @@ The following matrix maps the PIM Test Conditions to their corresponding test ca
 | **PC-016** | TC-PIM-012 | Covers filter inputs restoration on Reset click. |
 | **PC-017** | TC-PIM-013 | Covers table navigation widgets. |
 | **PC-018** | TC-PIM-014 | Covers record selection delete workflows. |
+| **PC-019** | TC-PIM-015 | Covers script/HTML injection handling in employee name fields. |
 
 ---
 
@@ -340,12 +362,13 @@ The following matrix maps the PIM Test Conditions to their corresponding test ca
 
 ### Priority Distribution
 * **High Priority**: 8 test cases
-* **Medium Priority**: 5 test cases
+* **Medium Priority**: 6 test cases
 * **Low Priority**: 1 test case
-* **Total Test Cases**: `14`
+* **Total Test Cases**: `15`
 
 ### Test Type Distribution
 * **UI**: 2 test cases
 * **Validation**: 4 test cases
 * **Functional**: 6 test cases
 * **Usability**: 2 test cases
+* **Security**: 1 test case

@@ -5,11 +5,11 @@ This document records the manual test execution details, actual results, and scr
 ---
 
 ## 1. Execution Overview
-* **Execution Date**: 2026-08-22
-* **Execution Method**: Manual execution using Chromium browser
+* **Execution Date**: 2026-08-22 (TC-ADMIN-001 to TC-ADMIN-011); 2026-09-05 (TC-ADMIN-012)
+* **Execution Method**: Manual execution using Chromium browser (TC-ADMIN-001 to TC-ADMIN-011). TC-ADMIN-012 was executed via a scripted Playwright browser session against the live public demo — a real browser, real requests, real responses, just driven by code instead of by hand, added specifically to probe a gap (special-character/injection-style input) this suite hadn't covered yet.
 * **Operating System**: Windows 11
-* **Execution Status**: 11 Executed, 11 Passed, 0 Failed, 0 Blocked
-* **Pass Rate**: 100.0%
+* **Execution Status**: 12 Executed, 11 Passed, 1 Failed, 0 Blocked
+* **Pass Rate**: 91.7%
 
 ---
 
@@ -37,6 +37,7 @@ This document records the manual test execution details, actual results, and scr
 | **TC-ADMIN-009** | LC-AD-010 | Verify Reset button clears search filter fields. | **PASS** | Input fields cleared successfully |
 | **TC-ADMIN-010** | LC-AD-011 | Verify successful deletion of selected system user record. | **PASS** | [TC-ADMIN-010-user-deleted.png](screenshots/TC-ADMIN-010-user-deleted.png) |
 | **TC-ADMIN-011** | LC-AD-012 | Verify duplicate Username registration rejection validation. | **PASS** | Duplicate rejected with 'Already exists' |
+| **TC-ADMIN-012** | LC-AD-013 | Verify Username field rejects unsafe special characters. | **FAIL** ([BUG-ADMIN-001](../bug-reports/BUG-ADMIN-001-username-accepts-unrestricted-characters.md)) | [BUG-ADMIN-001-username-created.png](screenshots/BUG-ADMIN-001-username-created.png) |
 
 ---
 
@@ -132,3 +133,14 @@ This document records the manual test execution details, actual results, and scr
 * **Actual Result**: 
   * Inputted duplicate username `"Admin"`. The input field triggered the warning: `"Already exists"`.
 * **Status**: **PASS**
+
+---
+
+### TC-ADMIN-012: Verify Username Field Rejects Unsafe Special Characters
+* **Preconditions**: User on Add User page.
+* **Actual Result**: 
+  * Selected a valid User Role, Employee Name, and Status. Entered `' OR '1'='1` in the Username field along with a valid strong password, and clicked Save. No validation error appeared on the Username field itself; the form submitted successfully ("Success: Successfully Saved"). The account appeared in the System Users grid with that exact string as its username, and logging out and back in with it (same password) reached the Dashboard normally.
+  * The value was not executed as SQL — it was stored and matched as a literal string with no errors or side effects, so this is a missing-input-validation defect rather than a SQL-injection vulnerability. See [BUG-ADMIN-001](../bug-reports/BUG-ADMIN-001-username-accepts-unrestricted-characters.md) for the full write-up.
+  * The test account was deleted immediately after verification.
+* **Screenshot**: `test-execution/screenshots/BUG-ADMIN-001-username-created.png`, `test-execution/screenshots/BUG-ADMIN-001-login-success.png`
+* **Status**: **FAIL**

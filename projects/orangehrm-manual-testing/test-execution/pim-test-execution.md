@@ -5,10 +5,10 @@ This document records the manual test execution details, actual results, and scr
 ---
 
 ## 1. Execution Overview
-* **Execution Date**: 2026-08-22
-* **Execution Method**: Manual execution using Chromium browser
+* **Execution Date**: 2026-08-22 (TC-PIM-001 to TC-PIM-014); 2026-09-05 (TC-PIM-015)
+* **Execution Method**: Manual execution using Chromium browser (TC-PIM-001 to TC-PIM-014). TC-PIM-015 was executed via a scripted Playwright browser session against the live public demo — a real browser, real requests, real responses, just driven by code instead of by hand, added specifically to check a security-relevant gap (injection-style input) this suite hadn't covered yet.
 * **Operating System**: Windows 11
-* **Execution Status**: 14 Executed, 14 Passed, 0 Failed, 0 Blocked
+* **Execution Status**: 15 Executed, 15 Passed, 0 Failed, 0 Blocked
 * **Pass Rate**: 100.0%
 
 ---
@@ -40,6 +40,7 @@ This document records the manual test execution details, actual results, and scr
 | **TC-PIM-012** | PC-016 | Verify Reset button clears search filter card inputs. | **PASS** | Inputs cleared successfully |
 | **TC-PIM-013** | PC-017 | Verify presence and functionality of table pagination controls. | **PASS** | Controls checked at table footer |
 | **TC-PIM-014** | PC-018 | Verify successful deletion of selected employee from list. | **PASS** | [TC-PIM-014-employee-deleted.png](screenshots/TC-PIM-014-employee-deleted.png) |
+| **TC-PIM-015** | PC-019 | Verify HTML/script injection payload in First Name is safely rendered. | **PASS** | [TC-PIM-015-xss-safely-rendered.png](screenshots/TC-PIM-015-xss-safely-rendered.png) |
 
 ---
 
@@ -159,4 +160,15 @@ This document records the manual test execution details, actual results, and scr
 * **Actual Result**: 
   * Searched ID `9127`. Selected row check box, clicked Delete Selected button, and confirmed deletion in modal. Re-querying ID `9127` returned 0 records.
 * **Screenshot**: `test-execution/screenshots/TC-PIM-014-employee-deleted.png`
+* **Status**: **PASS**
+
+---
+
+### TC-PIM-015: Verify HTML/Script Injection Payload in First Name Field is Safely Rendered
+* **Preconditions**: User on Add Employee page.
+* **Actual Result**: 
+  * Entered `<img src=x onerror=alert(1)>` as First Name and `QAXSSTest` as Last Name with a unique Employee ID, and saved. The employee was created successfully (empNumber assigned) with no server error.
+  * Opened the created employee's Personal Details page: the name header displays the literal characters `<img src=x onerror=alert(1)>` as plain text. No `<img>` element was rendered and no JavaScript `alert()` fired at any point during creation or viewing — confirmed by listening for browser dialog events across the whole flow, which is the definitive test for whether a payload executed.
+  * The test employee record was deleted immediately after verification.
+* **Screenshot**: `test-execution/screenshots/TC-PIM-015-xss-safely-rendered.png`
 * **Status**: **PASS**

@@ -104,9 +104,9 @@ orangehrm-manual-testing/
 ### PIM Module Status Dashboard
 - **PIM Module Analysis**: Completed
 - **PIM Test Cases**: Completed
-- **PIM Execution**: Completed (14 passed, 0 failed, 0 not executed)
+- **PIM Execution**: Completed (15 passed, 0 failed, 0 not executed)
 - **Defects**: 0
-- **Evidence**: 4 Screenshots captured (`TC-PIM-001`, `TC-PIM-002`, `TC-PIM-005`, `TC-PIM-010`, `TC-PIM-014`)
+- **Evidence**: 6 Screenshots captured (`TC-PIM-001`, `TC-PIM-002`, `TC-PIM-005`, `TC-PIM-010`, `TC-PIM-014`, `TC-PIM-015`)
 - **Test Summary**: Completed
 
 ### Leave Module Status Dashboard
@@ -120,8 +120,8 @@ orangehrm-manual-testing/
 ### Admin Module Status Dashboard
 - **Admin Module Analysis**: Completed
 - **Admin Test Cases**: Completed
-- **Admin Execution**: Completed (11 passed, 0 failed, 0 not executed)
-- **Defects**: 0
-- **Evidence**: 4 Screenshots captured (`TC-ADMIN-001`, `TC-ADMIN-002`, `TC-ADMIN-007`, `TC-ADMIN-010`)
+- **Admin Execution**: Completed (11 passed, 1 failed, 0 not executed)
+- **Defects**: 1 (BUG-ADMIN-001 — Low severity)
+- **Evidence**: 5 Screenshots captured (`TC-ADMIN-001`, `TC-ADMIN-002`, `TC-ADMIN-007`, `TC-ADMIN-010`, `BUG-ADMIN-001`)
 - **Test Summary**: Completed
 
