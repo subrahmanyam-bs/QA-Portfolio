@@ -1,0 +1,528 @@
+{
+  "info": {
+    "name": "Medusa QA Portfolio - Store & Admin API",
+    "description": "Requests exercised for the Medusa QA portfolio project. All secrets/tokens are Postman variables — no values are hardcoded. Set collection or environment variables locally before running: base_url, publishable_api_key, access_token, customer_access_token, customer_id, product_id, variant_id, cart_id, region_id, order_id, line_item_id.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:9000" },
+    { "key": "publishable_api_key", "value": "" },
+    { "key": "access_token", "value": "" },
+    { "key": "customer_access_token", "value": "" },
+    { "key": "customer_id", "value": "" },
+    { "key": "product_id", "value": "" },
+    { "key": "variant_id", "value": "" },
+    { "key": "cart_id", "value": "" },
+    { "key": "line_item_id", "value": "" },
+    { "key": "region_id", "value": "" },
+    { "key": "order_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Admin login (positive)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/user/emailpass", "host": ["{{base_url}}"], "path": ["auth", "user", "emailpass"] },
+            "description": "Expected: 200 with a JWT `token`. Copy the token into the `access_token` variable for subsequent Admin requests."
+          }
+        },
+        {
+          "name": "Admin login - wrong password (negative)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"WrongPassword123\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/user/emailpass", "host": ["{{base_url}}"], "path": ["auth", "user", "emailpass"] },
+            "description": "Expected: 401 with a generic 'Invalid email or password' message."
+          }
+        },
+        {
+          "name": "Admin login - missing password (boundary)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{admin_email}}\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/user/emailpass", "host": ["{{base_url}}"], "path": ["auth", "user", "emailpass"] },
+            "description": "Actual: 401 'Password should be a string'. A 400 would fit better for a validation failure like this one, but it's a minor status-code quirk, not a bug on its own."
+          }
+        },
+        {
+          "name": "Customer register (positive)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{new_customer_email}}\",\n  \"password\": \"{{new_customer_password}}\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/customer/emailpass/register", "host": ["{{base_url}}"], "path": ["auth", "customer", "emailpass", "register"] },
+            "description": "Expected: 200 with a JWT `token`. Use the token as a bearer token to then POST /store/customers to create the profile."
+          }
+        },
+        {
+          "name": "Customer register - duplicate email (negative)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{new_customer_email}}\",\n  \"password\": \"{{new_customer_password}}\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/customer/emailpass/register", "host": ["{{base_url}}"], "path": ["auth", "customer", "emailpass", "register"] },
+            "description": "Run this AFTER the positive registration above with the same email. Expected: 401 'Identity with email already exists'."
+          }
+        },
+        {
+          "name": "Customer register - invalid email format (BUG-02)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"not-an-email\",\n  \"password\": \"Test1234\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/customer/emailpass/register", "host": ["{{base_url}}"], "path": ["auth", "customer", "emailpass", "register"] },
+            "description": "Expected: 400 validation error naming `email`. Actual (confirmed defect BUG-02): 200, a valid JWT is issued for a syntactically invalid email."
+          }
+        },
+        {
+          "name": "Customer login (positive)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{new_customer_email}}\",\n  \"password\": \"{{new_customer_password}}\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/customer/emailpass", "host": ["{{base_url}}"], "path": ["auth", "customer", "emailpass"] },
+            "description": "Copy the returned token into `customer_access_token` for customer-scoped requests below."
+          }
+        },
+        {
+          "name": "Customer login - nonexistent email (negative, no enumeration)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"doesnotexist@example.com\",\n  \"password\": \"whatever\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/customer/emailpass", "host": ["{{base_url}}"], "path": ["auth", "customer", "emailpass"] },
+            "description": "Expected: 401 with the SAME generic message as a wrong-password attempt (verifies no account enumeration)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List products (positive/smoke)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": { "raw": "{{base_url}}/store/products", "host": ["{{base_url}}"], "path": ["store", "products"] }
+          }
+        },
+        {
+          "name": "Product detail with variants + region price",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": {
+              "raw": "{{base_url}}/store/products?limit=1&region_id={{region_id}}&fields=id,title,+variants.id,+variants.title,+variants.sku,*variants.calculated_price",
+              "host": ["{{base_url}}"], "path": ["store", "products"],
+              "query": [
+                { "key": "limit", "value": "1" },
+                { "key": "region_id", "value": "{{region_id}}" },
+                { "key": "fields", "value": "id,title,+variants.id,+variants.title,+variants.sku,*variants.calculated_price" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get product - invalid ID (negative)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": { "raw": "{{base_url}}/store/products/prod_INVALID_ID_123", "host": ["{{base_url}}"], "path": ["store", "products", "prod_INVALID_ID_123"] },
+            "description": "Expected: 404 with a clear message."
+          }
+        },
+        {
+          "name": "Pricing without region_id (negative)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": {
+              "raw": "{{base_url}}/store/products?limit=1&fields=id,title,*variants.calculated_price",
+              "host": ["{{base_url}}"], "path": ["store", "products"],
+              "query": [ { "key": "limit", "value": "1" }, { "key": "fields", "value": "id,title,*variants.calculated_price" } ]
+            },
+            "description": "Expected: 400 'Missing required pricing context to calculate prices - region_id'."
+          }
+        },
+        {
+          "name": "Negative limit (BUG-03)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": {
+              "raw": "{{base_url}}/store/products?limit=-1&region_id={{region_id}}",
+              "host": ["{{base_url}}"], "path": ["store", "products"],
+              "query": [ { "key": "limit", "value": "-1" }, { "key": "region_id", "value": "{{region_id}}" } ]
+            },
+            "description": "Expected: 400. Actual (confirmed defect BUG-03): 500 unknown_error."
+          }
+        },
+        {
+          "name": "Negative offset (BUG-03)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": {
+              "raw": "{{base_url}}/store/products?offset=-1&region_id={{region_id}}",
+              "host": ["{{base_url}}"], "path": ["store", "products"],
+              "query": [ { "key": "offset", "value": "-1" }, { "key": "region_id", "value": "{{region_id}}" } ]
+            },
+            "description": "Expected: 400. Actual (confirmed defect BUG-03): 500 unknown_error."
+          }
+        },
+        {
+          "name": "No publishable key (negative)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/store/products", "host": ["{{base_url}}"], "path": ["store", "products"] },
+            "description": "Expected: 400, missing x-publishable-api-key header."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Regions",
+      "item": [
+        {
+          "name": "List regions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": { "raw": "{{base_url}}/store/regions", "host": ["{{base_url}}"], "path": ["store", "regions"] }
+          }
+        },
+        {
+          "name": "Get region - invalid ID (negative)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": { "raw": "{{base_url}}/store/regions/reg_INVALID", "host": ["{{base_url}}"], "path": ["store", "regions", "reg_INVALID"] },
+            "description": "Expected: 404 with a clear message."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Carts",
+      "item": [
+        {
+          "name": "Create cart (positive)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"region_id\": \"{{region_id}}\"\n}" },
+            "url": { "raw": "{{base_url}}/store/carts", "host": ["{{base_url}}"], "path": ["store", "carts"] },
+            "description": "Copy the returned cart.id into `cart_id`."
+          }
+        },
+        {
+          "name": "Add line item (positive)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"variant_id\": \"{{variant_id}}\",\n  \"quantity\": 2\n}" },
+            "url": { "raw": "{{base_url}}/store/carts/{{cart_id}}/line-items", "host": ["{{base_url}}"], "path": ["store", "carts", "{{cart_id}}", "line-items"] }
+          }
+        },
+        {
+          "name": "Add line item - invalid variant_id (negative)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"variant_id\": \"variant_DOES_NOT_EXIST\",\n  \"quantity\": 1\n}" },
+            "url": { "raw": "{{base_url}}/store/carts/{{cart_id}}/line-items", "host": ["{{base_url}}"], "path": ["store", "carts", "{{cart_id}}", "line-items"] },
+            "description": "Expected: 400 naming the invalid variant."
+          }
+        },
+        {
+          "name": "Add line item - quantity 0 (boundary)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"variant_id\": \"{{variant_id}}\",\n  \"quantity\": 0\n}" },
+            "url": { "raw": "{{base_url}}/store/carts/{{cart_id}}/line-items", "host": ["{{base_url}}"], "path": ["store", "carts", "{{cart_id}}", "line-items"] },
+            "description": "Expected: 400. Note the actual message text is self-contradictory ('expected at least 0') - documented observation, not a filed defect."
+          }
+        },
+        {
+          "name": "Add line item - decimal quantity (BUG-01)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"variant_id\": \"{{variant_id}}\",\n  \"quantity\": 2.7\n}" },
+            "url": { "raw": "{{base_url}}/store/carts/{{cart_id}}/line-items", "host": ["{{base_url}}"], "path": ["store", "carts", "{{cart_id}}", "line-items"] },
+            "description": "Expected: 400. Actual (confirmed defect BUG-01): 200, silently rounded to 3."
+          }
+        },
+        {
+          "name": "Add line item - quantity exceeds inventory (negative/boundary)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"variant_id\": \"{{variant_id}}\",\n  \"quantity\": 999999\n}" },
+            "url": { "raw": "{{base_url}}/store/carts/{{cart_id}}/line-items", "host": ["{{base_url}}"], "path": ["store", "carts", "{{cart_id}}", "line-items"] },
+            "description": "Expected/actual: 400 insufficient_inventory."
+          }
+        },
+        {
+          "name": "Update line item quantity",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"quantity\": 5\n}" },
+            "url": { "raw": "{{base_url}}/store/carts/{{cart_id}}/line-items/{{line_item_id}}", "host": ["{{base_url}}"], "path": ["store", "carts", "{{cart_id}}", "line-items", "{{line_item_id}}"] }
+          }
+        },
+        {
+          "name": "Remove line item",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": { "raw": "{{base_url}}/store/carts/{{cart_id}}/line-items/{{line_item_id}}", "host": ["{{base_url}}"], "path": ["store", "carts", "{{cart_id}}", "line-items", "{{line_item_id}}"] }
+          }
+        },
+        {
+          "name": "Get cart (persistence check)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": { "raw": "{{base_url}}/store/carts/{{cart_id}}", "host": ["{{base_url}}"], "path": ["store", "carts", "{{cart_id}}"] }
+          }
+        },
+        {
+          "name": "Get cart - nonexistent ID (negative)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": { "raw": "{{base_url}}/store/carts/cart_doesnotexist", "host": ["{{base_url}}"], "path": ["store", "carts", "cart_doesnotexist"] },
+            "description": "Expected: 404 with a clear message."
+          }
+        },
+        {
+          "name": "Set cart shipping/billing address",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"qa.tester+cart1@example.com\",\n  \"shipping_address\": {\n    \"first_name\": \"QA\",\n    \"last_name\": \"Tester\",\n    \"address_1\": \"123 Test Street\",\n    \"city\": \"Copenhagen\",\n    \"country_code\": \"dk\",\n    \"postal_code\": \"1000\"\n  },\n  \"billing_address\": {\n    \"first_name\": \"QA\",\n    \"last_name\": \"Tester\",\n    \"address_1\": \"123 Test Street\",\n    \"city\": \"Copenhagen\",\n    \"country_code\": \"dk\",\n    \"postal_code\": \"1000\"\n  }\n}"
+            },
+            "url": { "raw": "{{base_url}}/store/carts/{{cart_id}}", "host": ["{{base_url}}"], "path": ["store", "carts", "{{cart_id}}"] }
+          }
+        },
+        {
+          "name": "Get shipping options for cart",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": { "raw": "{{base_url}}/store/shipping-options?cart_id={{cart_id}}", "host": ["{{base_url}}"], "path": ["store", "shipping-options"], "query": [{ "key": "cart_id", "value": "{{cart_id}}" }] }
+          }
+        },
+        {
+          "name": "Add shipping method to cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"option_id\": \"{{shipping_option_id}}\"\n}" },
+            "url": { "raw": "{{base_url}}/store/carts/{{cart_id}}/shipping-methods", "host": ["{{base_url}}"], "path": ["store", "carts", "{{cart_id}}", "shipping-methods"] }
+          }
+        },
+        {
+          "name": "Create payment collection",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"cart_id\": \"{{cart_id}}\"\n}" },
+            "url": { "raw": "{{base_url}}/store/payment-collections", "host": ["{{base_url}}"], "path": ["store", "payment-collections"] }
+          }
+        },
+        {
+          "name": "Create payment session (manual provider)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"provider_id\": \"pp_system_default\"\n}" },
+            "url": { "raw": "{{base_url}}/store/payment-collections/{{payment_collection_id}}/payment-sessions", "host": ["{{base_url}}"], "path": ["store", "payment-collections", "{{payment_collection_id}}", "payment-sessions"] }
+          }
+        },
+        {
+          "name": "Complete cart -> order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": { "raw": "{{base_url}}/store/carts/{{cart_id}}/complete", "host": ["{{base_url}}"], "path": ["store", "carts", "{{cart_id}}", "complete"] },
+            "description": "Expected: 200 {type: 'order', order: {...}}. Copy order.id into `order_id`."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Create customer profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Authorization", "value": "Bearer {{customer_access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{new_customer_email}}\",\n  \"first_name\": \"QA\",\n  \"last_name\": \"Customer\"\n}" },
+            "url": { "raw": "{{base_url}}/store/customers", "host": ["{{base_url}}"], "path": ["store", "customers"] }
+          }
+        },
+        {
+          "name": "Create customer profile - no bearer token (negative)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"noauth@example.com\",\n  \"first_name\": \"No\",\n  \"last_name\": \"Auth\"\n}" },
+            "url": { "raw": "{{base_url}}/store/customers", "host": ["{{base_url}}"], "path": ["store", "customers"] },
+            "description": "Expected: 401 Unauthorized."
+          }
+        },
+        {
+          "name": "Get own profile (/me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Authorization", "value": "Bearer {{customer_access_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/store/customers/me", "host": ["{{base_url}}"], "path": ["store", "customers", "me"] }
+          }
+        },
+        {
+          "name": "Add address",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Authorization", "value": "Bearer {{customer_access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"first_name\": \"QA\",\n  \"last_name\": \"Customer\",\n  \"address_1\": \"456 QA Ave\",\n  \"city\": \"Berlin\",\n  \"country_code\": \"de\",\n  \"postal_code\": \"10115\"\n}" },
+            "url": { "raw": "{{base_url}}/store/customers/me/addresses", "host": ["{{base_url}}"], "path": ["store", "customers", "me", "addresses"] }
+          }
+        },
+        {
+          "name": "Own order history",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Authorization", "value": "Bearer {{customer_access_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/store/orders", "host": ["{{base_url}}"], "path": ["store", "orders"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Admin: list orders",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/orders", "host": ["{{base_url}}"], "path": ["admin", "orders"] }
+          }
+        },
+        {
+          "name": "Admin: get order - invalid ID (negative)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/orders/order_INVALID_ID", "host": ["{{base_url}}"], "path": ["admin", "orders", "order_INVALID_ID"] },
+            "description": "Expected: 404 with a clear message."
+          }
+        },
+        {
+          "name": "Store: get order - no bearer token (BUG-04)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" }],
+            "url": { "raw": "{{base_url}}/store/orders/{{order_id}}", "host": ["{{base_url}}"], "path": ["store", "orders", "{{order_id}}"] },
+            "description": "Expected: rejected, or scoped to a token proving ownership. Actual (confirmed defect BUG-04): 200, full order + PII returned with only the publishable key."
+          }
+        },
+        {
+          "name": "Store: get order - unrelated customer token (BUG-04)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-publishable-api-key", "value": "{{publishable_api_key}}" },
+              { "key": "Authorization", "value": "Bearer {{customer_access_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/store/orders/{{order_id}}", "host": ["{{base_url}}"], "path": ["store", "orders", "{{order_id}}"] },
+            "description": "Use a customer token for an account that did NOT place this order. Expected: 403/404. Actual (confirmed defect BUG-04): 200, full order + PII still returned - no ownership check exists."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - API Keys",
+      "item": [
+        {
+          "name": "List API keys (find publishable key)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/api-keys", "host": ["{{base_url}}"], "path": ["admin", "api-keys"] },
+            "description": "Use this to retrieve the Default Publishable API Key token and set it as the `publishable_api_key` variable."
+          }
+        }
+      ]
+    }
+  ]
+}
